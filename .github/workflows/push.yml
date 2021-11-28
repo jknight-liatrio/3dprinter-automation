@@ -7,7 +7,7 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - name: slice
-      uses: ../actions/action.yml
+      uses: Dockerfile
       env:
         SLICE_CFG: config.ini
       with:

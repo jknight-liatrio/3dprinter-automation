@@ -1,7 +1,0 @@
-# action.yml
-name: 'slicer'
-description: '3d Print Slicer'
-
-runs:
-  using: 'docker'
-  image: 'Dockerfile'
