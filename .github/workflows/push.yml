@@ -7,7 +7,7 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - name: slice
-      uses: ./Dockerfile
+      uses: ./.github/workflows/Dockerfile
       env:
         SLICE_CFG: config.ini
       with:
