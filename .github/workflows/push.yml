@@ -11,4 +11,4 @@ jobs:
       env:
         SLICE_CFG: resources/config.ini
       with:
-        args: octocat.stl
+        args: resources/octocat.stl
