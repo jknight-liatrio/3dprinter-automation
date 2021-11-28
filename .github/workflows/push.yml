@@ -9,6 +9,6 @@ jobs:
     - name: slice
       uses: ./
       env:
-        SLICE_CFG: config.ini
+        SLICE_CFG: resources/config.ini
       with:
         args: octocat.stl
