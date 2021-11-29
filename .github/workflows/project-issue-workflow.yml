@@ -1,45 +1,54 @@
 on: 
   project_card:
     types: [moved]
-  name: 3d print workflow
-  jobs:
-    get-stl-attachment:
-      runs-on: ubuntu-latest
-      steps:     
-      - uses: actions/checkout@v2
-      - name: Get Project Card Context
-        env:
-          GITHUB_PROJECT_CONTEXT: ${{ toJson(github) }}
-          PROJECT_CARD_ID: ${{github.event.project_card.id}}
-        run: echo "$GITHUB_PROECT_CONTEXT"
-        env:
-          project_card_id: ${{github.event.project_card.id}}
-      # - name: Get Issue Context
-      #   env:
-      #     GITHUB_ISSUE_CONTEXT: ${{ toJson(github) }}
-      #   run: echo "$GITHUB_CONTEXT"
-      # - name: get attachment
-      #   run: |
-      #     attachments=($(echo $url | awk -v RS=[\(] -v FS=[\)] 'NR>1{print $1}' ))
-      #     echo ${attachments[1]}
-      #     for i in "${attachments[@]}"
-      #     do 
-      #       :
-      #       echo $i
-      #       curl -O $i
-      #     done
-      #     ls
-      #   env:
-      #     url: ${{github.event.issue.body}}
-    # slice:
-    #   name: create gcode from stl
-    #   runs-on: ubuntu-latest
-    #   steps:
-    #   - uses: actions/checkout@master
-    #   - name: slice
-    #     uses: ./
-    #     env:
-    #       SLICE_CFG: resources/config.ini
-    #     with:
-    #       args: resources/octocat.stl
-    
+  workflow_dispatch:
+    inputs:
+      issueURL:
+        description: 'Issue URL with STL attachment'     
+        required: false
+
+name: 3d print workflow
+jobs:
+  get-stl-attachment:
+    runs-on: ubuntu-latest
+    steps:     
+    - uses: actions/checkout@v2
+    - name: Get Project Card Context
+      env:
+        GITHUB_PROJECT_CONTEXT: ${{ toJson(github) }}
+        PROJECT_CARD_ID: ${{ github.event.project_card.id }}
+        INPUT_ISSUE_URL: ${{ github.event.inputs.issueURL }}
+      run: |
+        echo "GITHUB_PROECT_CONTEXT = $GITHUB_PROECT_CONTEXT"
+        echo "ROJECT_CARD_ID = $PROJECT_CARD_ID"
+        echo "INPUT_ISSUE_URL = $INPUT_ISSUE_URL"
+
+    # - name: Get Issue Context
+    #   env:
+    #     GITHUB_ISSUE_CONTEXT: ${{ toJson(github) }}
+    #   run: echo "$GITHUB_CONTEXT"
+    # - name: get attachment
+    #   run: |
+    #     attachments=($(echo $url | awk -v RS=[\(] -v FS=[\)] 'NR>1{print $1}' ))
+    #     echo ${attachments[1]}
+    #     for i in "${attachments[@]}"
+    #     do 
+    #       :
+    #       echo $i
+    #       curl -O $i
+    #     done
+    #     ls
+    #   env:
+    #     url: ${{github.event.issue.body}}
+  # slice:
+  #   name: create gcode from stl
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@master
+  #   - name: slice
+  #     uses: ./
+  #     env:
+  #       SLICE_CFG: resources/config.ini
+  #     with:
+  #       args: resources/octocat.stl
+  
