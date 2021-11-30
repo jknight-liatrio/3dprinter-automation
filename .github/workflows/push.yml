@@ -1,0 +1,14 @@
+on: push
+name: generate gcode
+jobs:
+  print:
+    name: create gcode from stl
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: slice
+      uses: ./
+      env:
+        SLICE_CFG: resources/config.ini
+      with:
+        args: resources/octocat.stl
