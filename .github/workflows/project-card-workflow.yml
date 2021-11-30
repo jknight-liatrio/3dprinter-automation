@@ -9,7 +9,7 @@ on:
 
 name: 3d print workflow
 jobs:
-  get-stl-attachment:
+  get-stl-file:
     runs-on: ubuntu-latest
     steps:     
     - uses: actions/checkout@v2
@@ -21,6 +21,6 @@ jobs:
         INPUT_STL_URL: ${{ github.event.inputs.stlURL }}
       run: |
         echo "GITHUB_PROECT_CONTEXT = $GITHUB_PROECT_CONTEXT"
-        echo "ROJECT_CARD_ID = $PROJECT_CARD_ID"
-        echo "PROJECT_CARD_NOTE" = $PROJECT_CARD_NOTE"
+        echo "PROJECT_CARD_ID = $PROJECT_CARD_ID"
+        echo "PROJECT_CARD_NOTE = $PROJECT_CARD_NOTE"
         echo "INPUT_STL_URL = $INPUT_STL_URL"
