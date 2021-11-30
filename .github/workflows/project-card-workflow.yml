@@ -1,0 +1,26 @@
+on: 
+  project_card:
+    types: [moved]
+  workflow_dispatch:
+    inputs:
+      stlURL:
+        description: 'URL of STL to slice'     
+        required: false
+
+name: 3d print workflow
+jobs:
+  get-stl-attachment:
+    runs-on: ubuntu-latest
+    steps:     
+    - uses: actions/checkout@v2
+    - name: Get Project Card Context
+      env:
+        GITHUB_PROJECT_CONTEXT: ${{ toJson(github) }}
+        PROJECT_CARD_ID: ${{ github.event.project_card.id }}
+        PROJECT_CARD_NOTE: ${{ github.event.project_card.note }}
+        INPUT_STL_URL: ${{ github.event.inputs.stlURL }}
+      run: |
+        echo "GITHUB_PROECT_CONTEXT = $GITHUB_PROECT_CONTEXT"
+        echo "ROJECT_CARD_ID = $PROJECT_CARD_ID"
+        echo "PROJECT_CARD_NOTE" = $PROJECT_CARD_NOTE"
+        echo "INPUT_STL_URL = $INPUT_STL_URL"
