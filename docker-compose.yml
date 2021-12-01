@@ -3,10 +3,12 @@ services:
   slic3r:
     build:
       context: .
-    command: octocat.stl
     image: slicer:latest
     environment:
       - SLICE_CFG=config.ini
+      - NOTE_TEXT=profile=Logo File\r\nstl=https://raw.githubusercontent.com/liatrio/3dprinter-automation/main/resources/octocat.stl
+      # - STL_URL=https://raw.githubusercontent.com/liatrio/3dprinter-automation/main/resources/octocat.stl
+      # - INPUT_STL_URL= (((This would simulate a manual workflow)))
     volumes:
       - ./resources:/github/workspace
 volumes:

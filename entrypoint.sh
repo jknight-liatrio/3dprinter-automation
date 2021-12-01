@@ -72,6 +72,30 @@ fi
 
 echo ">>> Center of bed coordinates will be set to: ${CENTER_OF_BED}"
 
+if [[ ! -z "${NOTE_TEXT}" ]]; then
+    echo "Parsing STL from NOTE_TEXT ${NOTE_TEXT}"
+    STL_URL="${NOTE_TEXT#*stl=}"
+    echo "Parsed NOTE_TEXT STL value = ${STL_URL}"
+fi
+
+if [[ ! -z "${INPUT_STL_URL}" ]]; then
+    echo "INPUT_STL_URL=${INPUT_STL_URL}"
+    echo "Overriding dynamic workflow..."
+    STL_URL=${INPUT_STL_URL}
+    echo ">>> Manual workflow started >>>> Downloading STL from ${STL_URL}"
+else
+    echo ">>> Downloading STL from ${STL_URL}"
+fi
+
+if [[ ! -z "${STL_URL}" ]]; then
+    STL_FILENAME="$(basename "${STL_URL}")"
+    echo "STL Filename = ${STL_FILENAME}"
+    curl -o ./${STL_FILENAME} ${STL_URL}
+else 
+    echo "No STL_URL found in."
+    exit 1
+fi
+
 # if [[ -z "${GITHUB_TOKEN}" ]]; then
 # 	echo -e "\n!!! ERROR: Unable to find your GITHUB_TOKEN !!!"
 # 	echo
@@ -96,18 +120,18 @@ fi
 
 echo -e "\n>>> Processing STLs $* with ${SLICE_CFG}\n"
 
-for stl in "$@"; do
+#for stl in "$@"; do
 	#mkdir -p "${WORKDIR}/${TMPDIR}"
 	#TMPDIR="$(mktemp -d)"
 
-	echo -e "\n>>> Generating STL for ${stl} ...\n"
+	echo -e "\n>>> Generating STL for ${STL_FILENAME} ...\n"
 	if /Slic3r/slic3r-dist/slic3r \
 		--no-gui \
 		--load "${WORKDIR}/${SLICE_CFG}" \
 		--output-filename-format '{input_filename_base}_{layer_height}mm_{filament_type[0]}_{printer_model}.gcode_updated' \
 		--output "${WORKDIR}" \
 		--print-center "${CENTER_OF_BED:-100,100}" \
-		"${EXTRA_SLICER_ARGS[@]}" "${WORKDIR}/${stl}"; then
+		"${EXTRA_SLICER_ARGS[@]}" "${WORKDIR}/${STL_FILENAME}"; then
 		echo -e "\n>>> Successfully generated gcode for STL\n"
 	else
 		exit_code=$?
@@ -120,7 +144,7 @@ for stl in "$@"; do
 
 	# Get path, including any subdirectories that the STL might belong in
 	# but exclude the WORKDIR
-	STL_DIR="$(dirname "${WORKDIR}/${stl}")"
+	STL_DIR="$(dirname "${WORKDIR}/${STL_FILENAME}")"
 	GCODE_DIR="${STL_DIR#"$WORKDIR"}"
 
 	GCODE="${GCODE_DIR}/${DEST_GCODE_FILE}"
@@ -245,7 +269,7 @@ for stl in "$@"; do
 	echo -e "\n>>> Finished processing file\n"
 
 	rm -rf "${TMPDIR}"
-done
+#done
 ) 9>"$WORKDIR/slice.lock"
 
 echo "Completed at: $(date +%H:%M:%S:%N)"
