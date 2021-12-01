@@ -21,9 +21,5 @@ jobs:
         PROJECT_CARD_ID: ${{ github.event.project_card.id }}
         NOTE_TEXT: ${{ github.event.project_card.note }}
         INPUT_STL_URL: ${{ github.event.inputs.stlURL }}
-      run: |
-        echo "GITHUB_PROJECT_CONTEXT = $GITHUB_PROJECT_CONTEXT"
-        echo "PROJECT_CARD_ID = $PROJECT_CARD_ID"
-        echo "PROJECT_CARD_NOTE = $PROJECT_CARD_NOTE"
-        echo "INPUT_STL_URL = $INPUT_STL_URL"
+
 
