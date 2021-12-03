@@ -1,14 +1,25 @@
 version: "3.9" 
 services:
+  octoprint:
+      image: octoprint/octoprint
+      restart: unless-stopped
+      ports:
+        - 80:80
+      volumes:
+        - /Users/robert/Development/3dprint:/octoprint
   slic3r:
     build:
       context: .
     image: slicer:latest
+    depends_on:
+      - octoprint
     environment:
       - SLICE_CFG=config.ini
-      - NOTE_TEXT=profile=Logo File\r\nstl=https://raw.githubusercontent.com/liatrio/3dprinter-automation/main/resources/octocat.stl
-      # - STL_URL=https://raw.githubusercontent.com/liatrio/3dprinter-automation/main/resources/octocat.stl
+      # - NOTE_TEXT=profile=Logo File\r\nstl=https://raw.githubusercontent.com/liatrio/3dprinter-automation/main/resources/octocat.stl
+      - STL_URL=https://raw.githubusercontent.com/liatrio/3dprinter-automation/main/resources/octocat.stl
       # - INPUT_STL_URL= (((This would simulate a manual workflow)))
+      - OCTOPRINT_UPLOAD_URL=http://octoprint:80/api/files/local
+      # - OCTOPRINT_API_KEY=####################### - Add the key to upload
     volumes:
       - ./resources:/github/workspace
 volumes:
